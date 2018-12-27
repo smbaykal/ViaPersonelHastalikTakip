@@ -1,0 +1,23 @@
+﻿SQLite EF6 base configuration
+https://www.codeproject.com/Articles/1158937/SQLite-with-Csharp-Net-and-Entity-Framework
+
+CodeFirst approach
+https://stackoverflow.com/a/38558400
+
+Specify the DbType property only if you plan to use CreateDatabase to create an instance of the database. 
+https://docs.microsoft.com/en-us/dotnet/api/system.data.linq.mapping.columnattribute.dbtype?view=netframework-4.7.2
+
+One-to-one relationship
+http://www.entityframeworktutorial.net/code-first/configure-one-to-one-relationship-in-code-first.aspx
+
+One-to-many relationship
+http://www.entityframeworktutorial.net/code-first/configure-one-to-many-relationship-in-code-first.aspx
+
+You can't project onto a mapped entity.
+https://stackoverflow.com/questions/5325797/the-entity-cannot-be-constructed-in-a-linq-to-entities-query
+
+Entity tracking.
+http://www.entityframeworktutorial.net/change-tracking-in-entity-framework.aspx
+
+For updating references, you do this shit
+http://kerryritter.com/updating-or-replacing-entities-in-entity-framework-6/
