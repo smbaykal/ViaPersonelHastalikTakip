@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaPersonelHastalikTakip", "ViaPersonelHastalikTakip\ViaPersonelHastalikTakip.csproj", "{2DDCB86F-9D9E-4D43-8C71-C9799B0462E2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ViaPersonelHastalikTakipKurulum", "ViaPersonelHastalikTakipKurulum\ViaPersonelHastalikTakipKurulum.vdproj", "{65161A58-E67C-4383-840D-2CBF4079E5CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,17 +17,13 @@ Global
 		{2DDCB86F-9D9E-4D43-8C71-C9799B0462E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DDCB86F-9D9E-4D43-8C71-C9799B0462E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DDCB86F-9D9E-4D43-8C71-C9799B0462E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C94EE85E-5201-4C2D-BE80-0B8D3B9FC31D}.Debug|Any CPU.ActiveCfg = Debug
-		{C94EE85E-5201-4C2D-BE80-0B8D3B9FC31D}.Release|Any CPU.ActiveCfg = Release
+		{65161A58-E67C-4383-840D-2CBF4079E5CF}.Debug|Any CPU.ActiveCfg = Debug
+		{65161A58-E67C-4383-840D-2CBF4079E5CF}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {148BCF98-E350-45CC-9B91-583D83235F79}
-	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 EndGlobal

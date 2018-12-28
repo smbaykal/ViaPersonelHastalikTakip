@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ClosedXML.Excel;
+﻿using System.Collections.Generic;
+using System.IO;
+using ExcelDataReader;
 using ViaPersonelHastalikTakip.Database;
 using ViaPersonelHastalikTakip.Models;
 
@@ -10,96 +10,48 @@ namespace ViaPersonelHastalikTakip.Util
     {
         public static void ImportReference(string fileName)
         {
-            var list = new List<Referans>();
-            using (var workbook = new XLWorkbook(fileName))
-            {
-                var ws = workbook.Worksheet(1);
-
-                //var firstCell = ws.FirstCellUsed();
-                //var lastCell = ws.LastCellUsed();
-
-                //var range = ws.Range(firstCell, lastCell);
-
-
-                for (var col = 'A'; col <= 'D'; col++)
-                {
-                    var header = ws.Cell(1, col.ToString()).GetValue<string>();
-                    var rt = DatabaseContext.ReferansTur.Ipucu;
-                    if (header.ToLower().Contains("ünvan"))
-                        rt = DatabaseContext.ReferansTur.GorevUnvani;
-                    else if (header.ToLower().Contains("yeri"))
-                        rt = DatabaseContext.ReferansTur.GorevYeri;
-                    else if (header.ToLower().Contains("personel")) rt = DatabaseContext.ReferansTur.PersonelTur;
-
-
-                    for (var row = 2;; row++)
-                    {
-                        var value = ws.Cell(row, col.ToString()).GetValue<string>();
-                        if (value.Trim().Length < 1) break;
-
-                        list.Add(new Referans
-                        {
-                            Deger = value,
-                            TurAciklama = header,
-                            TurKimlik = rt
-                        });
-                    }
-                }
-            }
+            var list = ReadReferenceFile(fileName);
 
             using (var dc = new DatabaseContext())
             {
                 dc.Referanslar.AddRange(list);
                 dc.SaveChanges();
             }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
         }
 
         public static List<Referans> ReadReferenceFile(string fileName)
         {
             var list = new List<Referans>();
-            using (var workbook = new XLWorkbook(fileName))
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
-                var ws = workbook.Worksheet(1);
-
-                //var firstCell = ws.FirstCellUsed();
-                //var lastCell = ws.LastCellUsed();
-
-                //var range = ws.Range(firstCell, lastCell);
-
-
-                for (var col = 'A'; col <= 'D'; col++)
+                using (var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream))
                 {
-                    var header = ws.Cell(1, col.ToString()).GetValue<string>();
-                    var rt = DatabaseContext.ReferansTur.Ipucu;
-                    if (header.ToLower().Contains("ünvan"))
-                        rt = DatabaseContext.ReferansTur.GorevUnvani;
-                    else if (header.ToLower().Contains("yeri"))
-                        rt = DatabaseContext.ReferansTur.GorevYeri;
-                    else if (header.ToLower().Contains("personel")) rt = DatabaseContext.ReferansTur.PersonelTur;
+                    var result = excelReader.AsDataSet();
+                    var sheet = result.Tables[0];
 
-
-                    for (var row = 2;; row++)
+                    var headers = new Dictionary<int, DatabaseContext.ReferansTur>
                     {
-                        var value = ws.Cell(row, col.ToString()).GetValue<string>();
-                        if (value.Trim().Length < 1) break;
+                        [0] = DatabaseContext.ReferansTur.GorevUnvani,
+                        [1] = DatabaseContext.ReferansTur.GorevYeri,
+                        [2] = DatabaseContext.ReferansTur.PersonelTur,
+                        [3] = DatabaseContext.ReferansTur.Ipucu
+                    };
 
-                        list.Add(new Referans
-                        {
-                            Deger = value,
-                            TurAciklama = header,
-                            TurKimlik = rt
-                        });
+                    for (var row = 1; row < sheet.Rows.Count; row++)
+                    for (var col = 0; col < headers.Count; col++)
+                    {
+                        var val = sheet.Rows[row][col].ToString();
+                        if (val.Length > 0)
+                            list.Add(
+                                new Referans
+                                {
+                                    Deger = val,
+                                    TurAciklama = sheet.Rows[0][col].ToString(),
+                                    TurKimlik = headers[col]
+                                });
                     }
                 }
             }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
 
             return list;
         }

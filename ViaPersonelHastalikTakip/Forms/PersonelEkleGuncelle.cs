@@ -78,17 +78,13 @@ namespace ViaPersonelHastalikTakip.Forms
                 GorevYeriGuncelle(dc);
             }
 
-            var personelTurCollection = new AutoCompleteStringCollection();
-            personelTurCollection.AddRange(_personelTurleri.Select(p => p.Deger).ToArray());
-            textBoxPersonelTur.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            textBoxPersonelTur.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            textBoxPersonelTur.AutoCompleteCustomSource = personelTurCollection;
+        }
 
-            var gorevUnvanCollection = new AutoCompleteStringCollection();
-            gorevUnvanCollection.AddRange(_gorevUnvanlari.Select(p => p.Deger).ToArray());
-            textBoxGorevUnvan.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            textBoxGorevUnvan.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            textBoxGorevUnvan.AutoCompleteCustomSource = gorevUnvanCollection;
+        private void GorevYeriGuncelle(DatabaseContext dc)
+        {
+            _gorevYerleri = (from g in dc.Referanslar
+                where g.TurKimlik == DatabaseContext.ReferansTur.GorevYeri
+                select g).ToList();
 
             var gorevYerleriCollection = new AutoCompleteStringCollection();
             gorevYerleriCollection.AddRange(_gorevYerleri.Select(p => p.Deger).ToArray());
@@ -97,18 +93,17 @@ namespace ViaPersonelHastalikTakip.Forms
             textBoxGorevYer.AutoCompleteCustomSource = gorevYerleriCollection;
         }
 
-        private void GorevYeriGuncelle(DatabaseContext dc)
-        {
-            _gorevYerleri = (from g in dc.Referanslar
-                where g.TurKimlik == DatabaseContext.ReferansTur.GorevYeri
-                select g).ToList();
-        }
-
         private void GorevUnvaniGuncelle(DatabaseContext dc)
         {
             _gorevUnvanlari = (from g in dc.Referanslar
                 where g.TurKimlik == DatabaseContext.ReferansTur.GorevUnvani
                 select g).ToList();
+
+            var gorevUnvanCollection = new AutoCompleteStringCollection();
+            gorevUnvanCollection.AddRange(_gorevUnvanlari.Select(p => p.Deger).ToArray());
+            textBoxGorevUnvan.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            textBoxGorevUnvan.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            textBoxGorevUnvan.AutoCompleteCustomSource = gorevUnvanCollection;
         }
 
         private void PersonelTurGuncelle(DatabaseContext dc)
@@ -116,6 +111,12 @@ namespace ViaPersonelHastalikTakip.Forms
             _personelTurleri = (from r in dc.Referanslar
                 where r.TurKimlik == DatabaseContext.ReferansTur.PersonelTur
                 select r).ToList();
+
+            var personelTurCollection = new AutoCompleteStringCollection();
+            personelTurCollection.AddRange(_personelTurleri.Select(p => p.Deger).ToArray());
+            textBoxPersonelTur.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            textBoxPersonelTur.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            textBoxPersonelTur.AutoCompleteCustomSource = personelTurCollection;
         }
 
         private void buttonEkleGuncelle_Click(object sender, EventArgs e)
@@ -207,9 +208,9 @@ namespace ViaPersonelHastalikTakip.Forms
                     var referansSonuc = referansEkleGuncelle.ShowDialog(this);
                     if (referansSonuc == DialogResult.OK)
                     {
-                        personelTur = referansEkleGuncelle.DonusReferans;
-                        PersonelTurGuncelle(new DatabaseContext());
-                        textBoxPersonelTur.Text = personelTur.Deger;
+                        gorevUnvani = referansEkleGuncelle.DonusReferans;
+                        GorevUnvaniGuncelle(new DatabaseContext());
+                        textBoxGorevUnvan.Text = gorevUnvani.Deger;
                     }
                 }
             }
@@ -225,9 +226,9 @@ namespace ViaPersonelHastalikTakip.Forms
                     var referansSonuc = referansEkleGuncelle.ShowDialog(this);
                     if (referansSonuc == DialogResult.OK)
                     {
-                        personelTur = referansEkleGuncelle.DonusReferans;
-                        PersonelTurGuncelle(new DatabaseContext());
-                        textBoxPersonelTur.Text = personelTur.Deger;
+                        gorevYeri = referansEkleGuncelle.DonusReferans;
+                        GorevYeriGuncelle(new DatabaseContext());
+                        textBoxGorevYer.Text = gorevYeri.Deger;
                     }
                 }
             }
